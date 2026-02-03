@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}Modération - {{ guild.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <h1>🛡️ Modération</h1>
+        <p>Gérez les sanctions et l'historique de modération</p>
+    </header>
+
+    <!-- Navigation tabs -->
+    <div class="tabs">
+        <a href="{{ url_for('guild_dashboard', guild_id=guild_id) }}" class="tab">📊 Dashboard</a>
+        <a href="{{ url_for('guild_moderation', guild_id=guild_id) }}" class="tab active">🛡️ Modération</a>
+        <a href="{{ url_for('guild_settings', guild_id=guild_id) }}" class="tab">⚙️ Paramètres</a>
+    </div>
+
+    <div class="moderation-grid">
+        <!-- Actions Rapides -->
+        <div class="panel">
+            <h3>⚡ Actions Rapides</h3>
+            <p class="panel-subtitle">Effectuer des actions de modération rapidement</p>
+
+            <div class="mod-actions">
+                <button class="btn btn-danger" onclick="showModal('ban')">
+                    <span>🔨</span> Bannir un Utilisateur
+                </button>
+                <button class="btn btn-warning" onclick="showModal('kick')">
+                    <span>👢</span> Expulser un Utilisateur
+                </button>
+                <button class="btn btn-info" onclick="showModal('mute')">
+                    <span>🔇</span> Mute un Membre
+                </button>
+                <button class="btn btn-secondary" onclick="showModal('warn')">
+                    <span>⚠️</span> Avertir un Membre
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistiques Modération -->
+        <div class="panel">
+            <h3>📊 Statistiques</h3>
+            <p class="panel-subtitle">Résumé des actions de modération</p>
+
+            <div class="mod-stats">
+                <div class="mod-stat-item">
+                    <span class="mod-stat-label">Bans totaux</span>
+                    <span class="mod-stat-value">-</span>
+                </div>
+                <div class="mod-stat-item">
+                    <span class="mod-stat-label">Kicks totaux</span>
+                    <span class="mod-stat-value">-</span>
+                </div>
+                <div class="mod-stat-item">
+                    <span class="mod-stat-label">Warns actifs</span>
+                    <span class="mod-stat-value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historique -->
+    <div class="panel">
+        <h3>📜 Historique de Modération</h3>
+        <p class="panel-subtitle">Les 20 dernières actions</p>
+
+        <div class="log-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Cible</th>
+                        <th>Modérateur</th>
+                        <th>Raison</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="mod-logs">
+                    <tr>
+                        <td colspan="5" class="loading-cell">Chargement...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour actions -->
+<div id="mod-modal" class="modal">
+    <div class="modal-content">
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+        <h2 id="modal-title">Action de Modération</h2>
+        <form id="mod-form">
+            <div class="form-group">
+                <label>ID Utilisateur</label>
+                <input type="text" name="user_id" placeholder="123456789..." required>
+            </div>
+            <div class="form-group">
+                <label>Raison</label>
+                <textarea name="reason" placeholder="Raison de la sanction..." rows="3" required></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Annuler</button>
+                <button type="submit" class="btn btn-primary">Confirmer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const guildId = {{ guild_id }};
+    let currentAction = null;
+
+    // Charger les logs de modération
+    async function loadModLogs() {
+        const tbody = document.getElementById('mod-logs');
+        
+        try {
+            const response = await fetch(`/api/guild/${guildId}/mod_logs`);
+            const data = await response.json();
+            
+            if (!data.success) {
+                throw new Error(data.error || 'Erreur inconnue');
+            }
+            
+            if (data.logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">Aucun log de modération disponible</td></tr>';
+                return;
+            }
+            
+            // Emojis pour les types d'actions
+            const actionEmojis = {
+                'ban': '🔨',
+                'unban': '🔓',
+                'tempban': '⏰🔨',
+                'kick': '👢',
+                'mute': '🔇',
+                'unmute': '🔊',
+                'tempmute': '⏰🔇',
+                'warn': '⚠️',
+                'clear': '🧹'
+            };
+            
+            // Générer les lignes du tableau
+            tbody.innerHTML = data.logs.map(log => {
+                const emoji = actionEmojis[log.action_type] || '📝';
+                const date = new Date(log.timestamp);
+                const formattedDate = date.toLocaleString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                return `
+                    <tr>
+                        <td>${emoji} ${log.action_type}</td>
+                        <td>${log.target_id}</td>
+                        <td>${log.moderator_id}</td>
+                        <td>${log.reason || '<em>Aucune raison</em>'}</td>
+                        <td>${formattedDate}</td>
+                    </tr>
+                `;
+            }).join('');
+            
+        } catch (error) {
+            console.error('Erreur lors du chargement des logs:', error);
+            tbody.innerHTML = '<tr><td colspan="5" class="loading-cell">❌ Erreur lors du chargement des logs</td></tr>';
+        }
+    }
+    
+    // Charger les logs au chargement de la page
+    window.addEventListener('DOMContentLoaded', loadModLogs);
+
+    function showModal(action) {
+        currentAction = action;
+        const titles = {
+            'ban': '🔨 Bannir un Utilisateur',
+            'kick': '👢 Expulser un Utilisateur',
+            'mute': '🔇 Mute un Membre',
+            'warn': '⚠️ Avertir un Membre'
+        };
+        document.getElementById('modal-title').textContent = titles[action];
+        document.getElementById('mod-modal').classList.add('active');
+    }
+
+    function closeModal() {
+        document.getElementById('mod-modal').classList.remove('active');
+        document.getElementById('mod-form').reset();
+    }
+
+    document.getElementById('mod-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+
+        // Ici vous pourriez envoyer la requête à l'API Discord
+        alert(`Action ${currentAction} pour l'utilisateur ${formData.get('user_id')}\nRaison: ${formData.get('reason')}\n\nNote: Cette fonctionnalité nécessiterait une API Discord du côté bot.`);
+        closeModal();
+    });
+
+    // Fermer modal en cliquant à l'extérieur
+    document.getElementById('mod-modal').addEventListener('click', (e) => {
+        if (e.target.id === 'mod-modal') {
+            closeModal();
+        }
+    });
+</script>
+{% endblock %}

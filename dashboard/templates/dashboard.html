@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Vos Serveurs{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <h1>🏠 Vos Serveurs</h1>
+        <p>Sélectionnez un serveur pour accéder à son dashboard</p>
+    </header>
+
+    <div class="guilds-grid">
+        {% if guilds %}
+        {% for guild in guilds %}
+        <a href="{{ url_for('guild_dashboard', guild_id=guild.id) }}" class="guild-card">
+            <div class="guild-icon">
+                {% if guild.icon %}
+                <img src="https://cdn.discordapp.com/icons/{{ guild.id }}/{{ guild.icon }}.png" alt="{{ guild.name }}">
+                {% else %}
+                <div class="guild-default-icon">{{ guild.name[0] }}</div>
+                {% endif %}
+            </div>
+            <div class="guild-info">
+                <h3 class="guild-name">{{ guild.name }}</h3>
+                <span class="guild-id">ID: {{ guild.id }}</span>
+            </div>
+            <div class="guild-arrow">→</div>
+        </a>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">😔</div>
+            <h3>Aucun serveur trouvé</h3>
+            <p>Vous n'avez pas de serveurs où vous êtes administrateur.</p>
+            <p>Invitez le bot sur votre serveur pour commencer !</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

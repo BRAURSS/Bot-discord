@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %} - Bot Discord</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    {% if session.get('discord_user') %}
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="logo">🤖</span>
+                <span class="brand-name">Bot Dashboard</span>
+            </div>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}" class="nav-link">
+                    <span>🏠</span> Serveurs
+                </a>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        {% if session.get('discord_user') %}
+                        <img src="https://cdn.discordapp.com/avatars/{{ session['discord_user']['id'] }}/{{ session['discord_user']['avatar'] }}.png" alt="Avatar">
+                        <span class="user-name">{{ session['discord_user']['username'] }}</span>
+                        {% endif %}
+                    </div>
+                    <a href="{{ url_for('logout') }}" class="btn btn-danger btn-sm">Déconnexion</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Bot Discord Dashboard - Créé avec ❤️</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

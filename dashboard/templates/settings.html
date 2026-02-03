@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Paramètres - {{ guild.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <h1>⚙️ Paramètres du Serveur</h1>
+        <p>Configurez les modules et fonctionnalités du bot</p>
+    </header>
+
+    <!-- Navigation tabs -->
+    <div class="tabs">
+        <a href="{{ url_for('guild_dashboard', guild_id=guild_id) }}" class="tab">📊 Dashboard</a>
+        <a href="{{ url_for('guild_moderation', guild_id=guild_id) }}" class="tab">🛡️ Modération</a>
+        <a href="{{ url_for('guild_settings', guild_id=guild_id) }}" class="tab active">⚙️ Paramètres</a>
+    </div>
+
+    <div class="settings-grid">
+        <!-- Modules -->
+        <div class="panel">
+            <h3>🎛️ Modules</h3>
+            <p class="panel-subtitle">Activer ou désactiver les fonctionnalités</p>
+
+            <div class="settings-list">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <strong>📊 Leveling</strong>
+                        <p>Système de niveaux et XP</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <strong>🤖 Auto-Modération</strong>
+                        <p>Filtrage automatique des messages</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <strong>🛡️ Anti-Raid</strong>
+                        <p>Protection contre les raids</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <strong>💬 Suggestions</strong>
+                        <p>Système de suggestions</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Canaux -->
+        <div class="panel">
+            <h3>📺 Canaux de Configuration</h3>
+            <p class="panel-subtitle">Configurer les canaux spéciaux</p>
+
+            <form class="settings-form">
+                <div class="form-group">
+                    <label>📝 Canal de Logs</label>
+                    <input type="text" placeholder="ID du canal (ex: 123456789...)" value="">
+                    <small>Canal où seront envoyés les logs de modération</small>
+                </div>
+
+                <div class="form-group">
+                    <label>🎫 Canal Tickets</label>
+                    <input type="text" placeholder="ID du canal" value="">
+                    <small>Canal pour le système de tickets</small>
+                </div>
+
+                <div class="form-group">
+                    <label>💡 Canal Suggestions</label>
+                    <input type="text" placeholder="ID du canal" value="">
+                    <small>Canal où poster les suggestions</small>
+                </div>
+
+                <button type="submit" class="btn btn-primary">💾 Sauvegarder</button>
+            </form>
+        </div>
+
+        <!-- Sécurité -->
+        <div class="panel">
+            <h3>🔐 Sécurité</h3>
+            <p class="panel-subtitle">Paramètres de sécurité avancés</p>
+
+            <div class="settings-list">
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <strong>🚫 Anti-Link</strong>
+                        <p>Bloquer les liens non autorisés</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <strong>🤬 Anti-Spam</strong>
+                        <p>Détection de spam automatique</p>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informations -->
+        <div class="panel">
+            <h3>ℹ️ Informations</h3>
+            <p class="panel-subtitle">Détails du bot</p>
+
+            <div class="info-list">
+                <div class="info-item">
+                    <span class="info-label">Version du Bot</span>
+                    <span class="info-value">2.0.0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Prefix de Commande</span>
+                    <span class="info-value"><code>/</code> (slash commands)</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Serveurs Actifs</span>
+                    <span class="info-value">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Empêcher soumission du formulaire (pour la démo)
+    document.querySelector('.settings-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        alert('Paramètres sauvegardés ! ✅\n\nNote: Cette fonctionnalité nécessiterait une API pour sauvegarder en base de données.');
+    });
+
+    // Toggle switches  
+    document.querySelectorAll('.toggle input').forEach(toggle => {
+        toggle.addEventListener('change', (e) => {
+            const setting = e.target.closest('.setting-item').querySelector('strong').textContent;
+            console.log(`${setting}: ${e.target.checked ? 'Activé' : 'Désactivé'}`);
+        });
+    });
+</script>
+{% endblock %}

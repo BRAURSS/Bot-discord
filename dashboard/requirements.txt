@@ -1,0 +1,11 @@
+# Dashboard Web - Dépendances Python
+
+# Framework Web
+Flask==3.0.0
+Flask-Session==0.5.0
+
+# HTTP Requests pour OAuth2
+requests==2.31.0
+
+# Variables d'environnement
+python-dotenv==1.0.0

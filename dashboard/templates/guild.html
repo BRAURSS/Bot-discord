@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}{{ guild.name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <header class="page-header">
+        <div class="guild-header">
+            <div class="guild-icon-large">
+                {% if guild.icon %}
+                <img src="https://cdn.discordapp.com/icons/{{ guild.id }}/{{ guild.icon }}.png" alt="{{ guild.name }}">
+                {% else %}
+                <div class="guild-default-icon-large">{{ guild.name[0] }}</div>
+                {% endif %}
+            </div>
+            <div>
+                <h1>{{ guild.name }}</h1>
+                <p class="guild-id-text">ID: {{ guild.id }}</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation tabs -->
+    <div class="tabs">
+        <a href="{{ url_for('guild_dashboard', guild_id=guild_id) }}" class="tab active">📊 Dashboard</a>
+        <a href="{{ url_for('guild_moderation', guild_id=guild_id) }}" class="tab">🛡️ Modération</a>
+        <a href="{{ url_for('guild_settings', guild_id=guild_id) }}" class="tab">⚙️ Paramètres</a>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <div class="stat-label">Utilisateurs Actifs</div>
+                <div class="stat-value" id="active-users">-</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">💬</div>
+            <div class="stat-content">
+                <div class="stat-label">Messages Totaux</div>
+                <div class="stat-value" id="total-messages">-</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">🔨</div>
+            <div class="stat-content">
+                <div class="stat-label">Actions Modération</div>
+                <div class="stat-value" id="mod-actions">-</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-content">
+                <div class="stat-label">Statut Bot</div>
+                <div class="stat-value online">En ligne</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h3>🏆 Top 10 Utilisateurs Actifs</h3>
+            <div id="top-users-list" class="top-users-list">
+                <div class="loading">Chargement...</div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h3>📈 Activité des 7 derniers jours</h3>
+            <canvas id="activity-chart"></canvas>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const guildId = {{ guild_id }};
+
+    // Charger les stats
+    async function loadStats() {
+        try {
+            const response = await fetch(`/api/guild/${guildId}/stats`);
+            const data = await response.json();
+
+            if (data.success) {
+                document.getElementById('active-users').textContent = data.stats.active_users.toLocaleString();
+                document.getElementById('total-messages').textContent = data.stats.total_messages.toLocaleString();
+                document.getElementById('mod-actions').textContent = data.stats.mod_actions.toLocaleString();
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des stats:', error);
+        }
+    }
+
+    // Charger top users
+    async function loadTopUsers() {
+        try {
+            const response = await fetch(`/api/guild/${guildId}/top_users`);
+            const data = await response.json();
+
+            if (data.success && data.users.length > 0) {
+                const medals = ['🥇', '🥈', '🥉'];
+                const html = data.users.map((user, index) => `
+                    <div class="top-user-item">
+                        <span class="rank">${medals[index] || `#${index + 1}`}</span>
+                        <span class="user-id">User ${user.user_id}</span>
+                        <span class="message-count">${user.message_count.toLocaleString()} msgs</span>
+                    </div>
+                `).join('');
+                document.getElementById('top-users-list').innerHTML = html;
+            } else {
+                document.getElementById('top-users-list').innerHTML = '<div class="empty-state-small">Aucune donnée</div>';
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
+    }
+
+    // Chart d'activité
+    const ctx = document.getElementById('activity-chart').getContext('2d');
+    let activityChart = null;
+
+    async function loadActivityChart() {
+        try {
+            const response = await fetch(`/api/guild/${guildId}/activity`);
+            const data = await response.json();
+
+            if (data.success) {
+                // Créer ou mettre à jour le graphique
+                if (activityChart) {
+                    activityChart.data.labels = data.labels;
+                    activityChart.data.datasets[0].data = data.data;
+                    activityChart.update();
+                } else {
+                    activityChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Messages',
+                                data: data.data,
+                                borderColor: '#5865F2',
+                                backgroundColor: 'rgba(88, 101, 242, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    display: false
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    },
+                                    ticks: {
+                                        color: '#a0a0a0'
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        color: '#a0a0a0'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement du graphique:', error);
+        }
+    }
+
+    // Charger les données au chargement de la page
+    loadStats();
+    loadTopUsers();
+    loadActivityChart();
+
+    // Rafraîchir toutes les 30 secondes
+    setInterval(() => {
+        loadStats();
+        loadTopUsers();
+        loadActivityChart();
+    }, 30000);
+</script>
+{% endblock %}
