@@ -1595,3 +1595,69 @@ Traceback (most recent call last):
     raise ClientConnectorDNSError(req.connection_key, exc) from exc
 aiohttp.client_exceptions.ClientConnectorDNSError: Cannot connect to host gateway-us-east1-b.discord.gg:443 ssl:default [Temporary failure in name resolution]
 2026-02-03 13:02:34,863 - discord.gateway - INFO - Shard ID None has successfully RESUMED session 6440e8036a10e5e69d1f467c1e3dc9be.
+2026-02-03 20:13:39,727 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:13:39,727 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:13:39,728 - discord.client - INFO - logging in using static token
+2026-02-03 20:13:39,955 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:14:23,870 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:14:23,870 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:14:23,871 - discord.client - INFO - logging in using static token
+2026-02-03 20:14:24,060 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:19:32,359 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:19:32,359 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:19:32,360 - discord.client - INFO - logging in using static token
+2026-02-03 20:19:32,548 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:21:03,599 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:21:03,599 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:21:03,600 - discord.client - INFO - logging in using static token
+2026-02-03 20:21:03,796 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:24:13,125 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:24:13,126 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:24:13,126 - discord.client - INFO - logging in using static token
+2026-02-03 20:24:13,326 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:26:46,816 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:26:46,816 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:26:46,817 - discord.client - INFO - logging in using static token
+2026-02-03 20:26:48,477 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:27:15,507 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:27:15,507 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:27:15,508 - discord.client - INFO - logging in using static token
+2026-02-03 20:27:15,696 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:27:53,735 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:27:53,735 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:27:53,736 - discord.client - INFO - logging in using static token
+2026-02-03 20:27:53,953 - __main__ - ERROR - ❌ Erreur critique: Improper token has been passed.
+2026-02-03 20:30:06,351 - discord.client - WARNING - PyNaCl is not installed, voice will NOT be supported
+2026-02-03 20:30:06,352 - __main__ - INFO - 🚀 Démarrage du bot...
+2026-02-03 20:30:06,353 - discord.client - INFO - logging in using static token
+2026-02-03 20:30:06,828 - database - INFO - Base de données initialisée avec succès
+2026-02-03 20:30:06,829 - __main__ - INFO - ✅ Base de données initialisée
+2026-02-03 20:30:06,860 - __main__ - INFO - ✅ Cog chargé: analytics
+2026-02-03 20:30:06,879 - __main__ - INFO - ✅ Cog chargé: automod
+2026-02-03 20:30:06,897 - __main__ - INFO - ✅ Cog chargé: configuration
+2026-02-03 20:30:06,915 - __main__ - INFO - ✅ Cog chargé: leveling
+2026-02-03 20:30:06,942 - __main__ - INFO - ✅ Cog chargé: moderation
+2026-02-03 20:30:06,960 - __main__ - INFO - ✅ Cog chargé: security
+2026-02-03 20:30:06,979 - __main__ - INFO - ✅ Cog chargé: setup
+2026-02-03 20:30:06,997 - __main__ - INFO - ✅ Cog chargé: suggestions
+2026-02-03 20:30:07,029 - __main__ - INFO - ✅ Cog chargé: tasks
+2026-02-03 20:30:07,049 - __main__ - INFO - ✅ Cog chargé: tickets
+2026-02-03 20:30:07,068 - __main__ - INFO - ✅ Cog chargé: utility
+2026-02-03 20:30:07,404 - __main__ - INFO - ✅ 43 commandes slash synchronisées
+2026-02-03 20:30:07,748 - discord.gateway - INFO - Shard ID None has connected to Gateway (Session ID: 014471f7907108876e49cb0281648577).
+2026-02-03 20:30:09,863 - cogs.tasks - INFO - ✅ Tâche check_temp_actions démarrée
+2026-02-03 20:30:09,863 - cogs.tasks - INFO - ✅ Tâche backup_database démarrée
+2026-02-03 20:30:09,864 - __main__ - INFO - ==================================================
+2026-02-03 20:30:09,864 - __main__ - INFO - 🤖 Bot connecté en tant que Bot test#3766
+2026-02-03 20:30:09,864 - __main__ - INFO - 📊 ID: 1467915001149915207
+2026-02-03 20:30:09,864 - __main__ - INFO - 🌐 Serveurs: 1
+2026-02-03 20:30:09,865 - __main__ - INFO - 👥 Utilisateurs: 3
+2026-02-03 20:30:09,865 - __main__ - INFO - ==================================================
+2026-02-03 20:30:09,890 - cogs.tasks - INFO - Ancien backup supprimé: bot_backup_20260203_203009.db
+2026-02-03 20:30:09,891 - cogs.tasks - INFO - ✅ Backup créé: bot_backup_20260203_203009.db
+2026-02-03 20:30:54,169 - cogs.moderation - INFO - bilal.sltgo a supprimé 2 messages dans #logs
+2026-02-03 20:31:05,218 - cogs.moderation - INFO - bilal.sltgo a supprimé 2 messages dans #suggestion
+2026-02-03 20:31:14,073 - cogs.moderation - INFO - bilal.sltgo a supprimé 9 messages dans #général
+2026-02-03 20:32:12,116 - cogs.tickets - INFO - raspoutine_667 a configuré le système de tickets dans #ticket
+2026-02-03 20:32:19,040 - cogs.tickets - INFO - Ticket #7 créé par bilal.sltgo
+2026-02-03 20:32:36,410 - cogs.tickets - INFO - bilal.sltgo a ajouté raspoutine_667 au ticket ticket-bilalsltgo

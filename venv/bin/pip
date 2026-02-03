@@ -1,5 +1,5 @@
 #!/bin/sh
-'''exec' "/home/bilalsltgo/Documents/bot discord/venv/bin/python3" "$0" "$@"
+'''exec' "/mnt/c/Users/bilal/OneDrive - Epitech/Documents/Bot-discord/venv/bin/python3" "$0" "$@"
 ' '''
 # -*- coding: utf-8 -*-
 import re
